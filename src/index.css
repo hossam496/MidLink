@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: only light;
+}
+
+@layer base {
+  /* Ensure consistent box-sizing across the app */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  /* Smooth scroll — respects user's reduced-motion preference */
+  html {
+    scroll-behavior: smooth;
+    color-scheme: only light;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply font-sans text-gray-800 bg-surface-50 antialiased;
+    min-height: 100dvh;
+    font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+    color-scheme: only light;
+    letter-spacing: -0.01em;
+  }
+
+  /* Accessible focus ring — visible for keyboard navigation */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-500;
+  }
+
+  /* Improved heading defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-gray-900 font-bold;
+    letter-spacing: -0.02em;
+  }
+
+  /* Smooth base transitions for interactive elements */
+  a, button, input, select, textarea {
+    transition: all 0.15s ease;
+  }
+}
+
+@layer components {
+  /* ─── Reusable button base ──────────────────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5
+           font-semibold text-sm tracking-wide
+           transition-all duration-200 ease-out
+           focus-visible:outline-2 focus-visible:outline-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed
+           active:scale-[0.98];
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white
+           hover:bg-primary-700 hover:shadow-md
+           focus-visible:outline-primary-600;
+  }
+
+  .btn-secondary {
+    @apply btn bg-white text-gray-700 border border-gray-200
+           hover:bg-gray-50 hover:border-gray-300 hover:shadow-sm
+           focus-visible:outline-primary-600;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger-500 text-white
+           hover:bg-danger-600 hover:shadow-md
+           focus-visible:outline-danger-500;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-gray-600
+           hover:bg-gray-100 hover:text-gray-900
+           focus-visible:outline-primary-600;
+  }
+
+  /* ─── Form input base ───────────────────────────────────────────────────── */
+  .input {
+    @apply block w-full rounded-xl border border-gray-200 px-4 py-2.5
+           text-sm placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500
+           disabled:bg-gray-50 disabled:cursor-not-allowed;
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    color-scheme: only light !important;
+  }
+
+  .input-error {
+    @apply input border-danger-500 focus:ring-danger-500/30 focus:border-danger-500;
+  }
+
+  /* ─── Card surface ──────────────────────────────────────────────────────── */
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-gray-100/80 p-5
+           transition-shadow duration-200;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-card-hover;
+  }
+
+  /* ─── Page section header ───────────────────────────────────────────────── */
+  .page-header {
+    @apply bg-white border-b border-gray-100 px-4 py-5;
+  }
+
+  .page-header-inner {
+    @apply mx-auto max-w-6xl flex items-center justify-between;
+  }
+
+  /* ─── Status badge base ─────────────────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold tracking-wide;
+  }
+}
+
+/* ─── Global Form Control Overrides ──────────────────────────────────────────
+   Force inputs, selects, and textareas to always render with a clean white
+   background and dark text across all browsers, operating system dark modes,
+   and extensions.
+   ──────────────────────────────────────────────────────────────────────────── */
+input,
+select,
+textarea {
+  color-scheme: only light !important;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+select option {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+select.input,
+select.input-error {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  color-scheme: only light !important;
+}
+
+/* ─── Browser autofill override ─────────────────────────────────────────────
+   Chrome and Edge apply a blue/black tint on autofilled inputs via a
+   pseudo-element that cannot be overridden with background-color alone.
+   The box-shadow trick is the standard cross-browser solution.
+   ──────────────────────────────────────────────────────────────────────────── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  /* Fake a white background using an inset box-shadow.
+     This overrides the browser's autofill background colour. */
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow:         0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #1e293b !important; /* slate-800 */
+  caret-color: #1e293b !important;
+  border-color: #e2e8f0 !important; /* gray-200 */
+  color-scheme: only light !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Dark-mode autofill — keeps readable contrast if user is in dark mode */
+@media (prefers-color-scheme: dark) {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    box-shadow:         0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #1e293b !important;
+  }
+}
+
+/* Firefox autofill */
+input:autofill {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+/* ─── Custom Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ─── Range input accent ────────────────────────────────────────────────── */
+input[type="range"] {
+  @apply accent-primary-600;
+}
